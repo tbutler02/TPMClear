@@ -1,7 +1,3 @@
-#Reset Value
-$RES = 0
-#Writes "TPM Clearer to screen"
-Write-Host "TPM Clearer"
 #This Elevates the script
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
     if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -10,7 +6,8 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
          Exit
         }
        }
-   
+#Writes "TPM Clearer to screen"
+Write-Host "TPM Clearer"
 
 #This line gets the user account and logs them out
 Get-ItemProperty -Path "C:\Users*\AppData\Local\Packages" | ForEach-Object {
@@ -23,11 +20,9 @@ Get-Tpm | Out-File -FilePath .\TPMCHECK.txt
 $SEL = Select-String -path .\TPMCHECK.txt -Pattern 'RestartPending            : True'
 if ($SEL -ne $null)
 {
-    $RES = $true
-}
-else
-{
-    $RES = $false
+    $RES = 1
+} else {
+    $RES = 0
 }
 #This restarts the computer if the TPM was cleared
 if ($RES == $true)
