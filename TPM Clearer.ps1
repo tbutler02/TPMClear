@@ -33,8 +33,8 @@ else
 if ($RES == $true)
 {
     Restart-Computer
-} else [
+} else {
     Write-Host "TPM not cleared. Please clear manually or run script again!"
     Start-Sleep -seconds 2.5
     exit
-]
+}
