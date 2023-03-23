@@ -36,4 +36,3 @@ if ($RES == $1)
     Start-Sleep -seconds 2.5
     exit
 }
-
