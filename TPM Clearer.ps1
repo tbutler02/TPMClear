@@ -6,26 +6,29 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
          Exit
         }
        }
+
+#Sets reset value for future use
+$RES = 0
 #Writes "TPM Clearer to screen"
 Write-Host "TPM Clearer"
 
 #This line gets the user account and logs them out
-Get-ItemProperty -Path "C:\Users*\AppData\Local\Packages" | ForEach-Object {
+Get-ItemProperty -Path "C:\Users\$env:UserName\AppData\Local\Packages" | ForEach-Object {
     Remove-Item -Path "$_\Microsoft.AAD.BrokerPlugin*" -Recurse -Force | Out-Null
     } 
 #This line clears TPM keys
-
+#LINE EMPTY UNTIL TESTED OR READY TO PUSH TO CLIENT
 #This block checks if TPM keys have been cleared
 Get-Tpm | Out-File -FilePath .\TPMCHECK.txt
 $SEL = Select-String -path .\TPMCHECK.txt -Pattern 'RestartPending            : True'
-if ($SEL -ne $null)
+if ($null -ne $SEL)
 {
     $RES = 1
 } else {
     $RES = 0
 }
 #This restarts the computer if the TPM was cleared
-if ($RES == $true)
+if ($RES == $1)
 {
     Restart-Computer
 } else {
@@ -33,3 +36,4 @@ if ($RES == $true)
     Start-Sleep -seconds 2.5
     exit
 }
+
